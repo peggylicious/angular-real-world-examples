@@ -31,20 +31,20 @@ export class DynamicFormFieldsValidation {
   accountTypeSchema = schema<userAccount>((user) => {
     // Hide individual account when user selects business.
     hidden(user.account.individual, {
-      when: ({ valueOf }) => valueOf(user.account.type) !== 'business',
+      when: ({ valueOf }) => valueOf(user.account.type) === 'business',
     });
     // Hide business account when user selects individual.
     hidden(user.account.business, {
-      when: ({ valueOf }) => valueOf(user.account.type) !== 'individual',
+      when: ({ valueOf }) => valueOf(user.account.type) === 'individual',
     });
     required(user.account.individual.firstName);
     required(user.account.business.registrationNumber);
   });
-  registerationForm = form<userAccount>(this.accountModel, this.accountTypeSchema);
+  registrationForm = form<userAccount>(this.accountModel, this.accountTypeSchema);
 
   async onSubmit(event: Event) {
     event.preventDefault();
-    const success = await submit(this.registerationForm, async (field) => {
+    const success = await submit(this.registrationForm, async (field) => {
       const backendModel = formToRequest(field().value());
       const result = await this.fakeBackendService.createAccount(backendModel);
       if (result.ok) return;
