@@ -1,0 +1,60 @@
+import { Component, inject, signal } from '@angular/core';
+import { form, FormField, hidden, required, schema, submit } from '@angular/forms/signals';
+import { userAccount } from '../../models/account';
+import { formToRequest } from '../../helpers/convert-to-api.model';
+import { Account } from '../../services/account';
+import { JsonPipe } from '@angular/common';
+
+@Component({
+  selector: 'app-dynamic-form-fields-validation',
+  imports: [FormField, JsonPipe],
+  templateUrl: './dynamic-form-fields-validation.html',
+  styleUrl: './dynamic-form-fields-validation.scss',
+})
+export class DynamicFormFieldsValidation {
+  fakeBackendService = inject(Account);
+  accountModel = signal<userAccount>({
+    account: {
+      type: 'individual',
+      individual: {
+        firstName: '',
+        lastName: '',
+      },
+      business: {
+        companyName: '',
+        taxId: '',
+        registrationNumber: '',
+      },
+    },
+  });
+
+  accountTypeSchema = schema<userAccount>((user) => {
+    // Hide individual account when user selects business.
+    hidden(user.account.individual, {
+      when: ({ valueOf }) => valueOf(user.account.type) !== 'business',
+    });
+    // Hide business account when user selects individual.
+    hidden(user.account.business, {
+      when: ({ valueOf }) => valueOf(user.account.type) !== 'individual',
+    });
+    required(user.account.individual.firstName);
+    required(user.account.business.registrationNumber);
+  });
+  registerationForm = form<userAccount>(this.accountModel, this.accountTypeSchema);
+
+  async onSubmit(event: Event) {
+    event.preventDefault();
+    const success = await submit(this.registerationForm, async (field) => {
+      const backendModel = formToRequest(field().value());
+      const result = await this.fakeBackendService.createAccount(backendModel);
+      if (result.ok) return;
+      return { kind: 'serverError', message: 'Failed to save' };
+    });
+    if (success) {
+      // Handle success — navigate, show confirmation, etc.
+      console.log("Account details submitted Successfully ...")
+    }else{
+      console.log("Unable to submit data ...")
+    }
+  }
+}

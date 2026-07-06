@@ -1,0 +1,90 @@
+<form>
+  <h2>Create Account</h2>
+{{registerationForm.account.type().value()}}
+  <div>
+    <label>Account Type</label>
+
+    <div>
+      <label>
+        <input
+          type="radio"
+          value="individual"
+          [formField]="registerationForm.account.type"
+        />
+        Individual
+      </label>
+
+      <label>
+        <input
+          type="radio"
+          value="business"
+          [formField]="registerationForm.account.type"
+        />
+        Business
+      </label>
+    </div>
+  </div>
+
+  @if (!registerationForm.account.individual().hidden()) {
+    <fieldset>
+      <legend>Individual Information</legend>
+
+      <div>
+        <label for="firstName">First Name</label>
+        <input
+          id="firstName"
+          type="text"
+          [formField]="registerationForm.account.individual.firstName"
+        />
+      </div>
+
+      <div>
+        <label for="lastName">Last Name</label>
+        <input
+          id="lastName"
+          type="text"
+          [formField]="registerationForm.account.individual.lastName"
+        />
+      </div>
+    </fieldset>
+  }
+
+  @if (!registerationForm.account.business().hidden()) {
+    <fieldset>
+      <legend>Business Information</legend>
+
+      <div>
+        <label for="companyName">Company Name</label>
+        <input
+          id="companyName"
+          type="text"
+          [formField]="registerationForm.account.business.companyName"
+        />
+      </div>
+
+      <div>
+        <label for="taxId">Tax ID</label>
+        <input
+          id="taxId"
+          type="text"
+          [formField]="registerationForm.account.business.taxId"
+        />
+      </div>
+
+      <div>
+        <label for="registrationNumber">Registration Number</label>
+        <input
+          id="registrationNumber"
+          type="text"
+          [formField]="registerationForm.account.business.registrationNumber"
+        />
+      </div>
+    </fieldset>
+  }
+
+  @if (registerationForm().errors().length) {
+    <span>{{ registerationForm().errors() | json}}</span>
+  }
+
+  <button  (click)="onSubmit($event)" [disabled]="registerationForm().invalid()">Create Account</button>
+</form>

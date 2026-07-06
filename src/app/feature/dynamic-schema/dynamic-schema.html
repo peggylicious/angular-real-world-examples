@@ -1,0 +1,20 @@
+<form action="">
+  <div>
+    <label for="email">Email:</label>
+    <input id="email" type="email" [formField]="userForm.email">
+  </div>
+  <div>
+    <label for="phone">Phone:</label>
+    <input id="phone" type="tel" [formField]="userForm.phone">
+  </div>
+  <div>
+    <label for="password">Password:</label>
+    <input id="password" type="password" [formField]="userForm.password">
+    @if (userForm.password().invalid()) {
+      <span>{{ userForm.password().errors()[0]}}</span>
+    }
+  </div>
+  <div>
+    <button >Save</button>
+  </div>
+</form>
