@@ -116,3 +116,11 @@ button:disabled {
 button:disabled:hover {
   background: #cbd5e1;
 }
+button.submit{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+button p{
+  margin: 0;
+}

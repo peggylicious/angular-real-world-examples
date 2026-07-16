@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { form, FormField, hidden, required, schema, submit } from '@angular/forms/signals';
 import { userAccount } from '../../models/account';
 import { formToRequest } from '../../helpers/convert-to-api.model';
@@ -12,8 +12,8 @@ import { JsonPipe } from '@angular/common';
   styleUrl: './dynamic-form-fields-validation.scss',
 })
 export class DynamicFormFieldsValidation {
-  fakeBackendService = inject(Account);
-  accountModel = signal<userAccount>({
+  private fakeBackendService = inject(Account);
+  private accountModel = signal<userAccount>({
     account: {
       type: 'individual',
       individual: {
@@ -27,8 +27,7 @@ export class DynamicFormFieldsValidation {
       },
     },
   });
-
-  accountTypeSchema = schema<userAccount>((user) => {
+  private accountTypeSchema = schema<userAccount>((user) => {
     // Hide individual account when user selects business.
     hidden(user.account.individual, {
       when: ({ valueOf }) => valueOf(user.account.type) === 'business',
@@ -40,10 +39,15 @@ export class DynamicFormFieldsValidation {
     required(user.account.individual.firstName);
     required(user.account.business.registrationNumber);
   });
-  registrationForm = form<userAccount>(this.accountModel, this.accountTypeSchema);
+  public registrationForm = form<userAccount>(this.accountModel, this.accountTypeSchema);
+
+  protected readonly isIndividualVisible = computed(() => !this.registrationForm.account.individual().hidden());
+  protected readonly isBusinessVisible = computed(() => !this.registrationForm.account.business().hidden());
 
   async onSubmit(event: Event) {
     event.preventDefault();
+    // Show Loader/spinner
+
     const success = await submit(this.registrationForm, async (field) => {
       const backendModel = formToRequest(field().value());
       const result = await this.fakeBackendService.createAccount(backendModel);

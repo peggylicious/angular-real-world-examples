@@ -24,7 +24,7 @@
     </div>
   </div>
 
-  @if (!registrationForm.account.individual().hidden()) {
+  @if (isIndividualVisible()) {
     <fieldset>
       <legend>Individual Information</legend>
 
@@ -48,7 +48,7 @@
     </fieldset>
   }
 
-  @if (!registrationForm.account.business().hidden()) {
+  @if (isBusinessVisible()) {
     <fieldset>
       <legend>Business Information</legend>
 
@@ -85,5 +85,10 @@
     <span>{{ registrationForm().errors() | json}}</span>
   }
 
-  <button  (click)="onSubmit($event)" [disabled]="registrationForm().invalid()">Create Account</button>
+  <button class="submit" (click)="onSubmit($event)" [disabled]="registrationForm().invalid()">
+    Create Account
+    @if (registrationForm().submitting()){
+      <p>...</p>
+    }
+  </button>
 </form>
