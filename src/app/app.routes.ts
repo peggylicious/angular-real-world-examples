@@ -8,5 +8,10 @@ export const routes: Routes = [
   {
     path: 'dynamic-field-validation',
     loadChildren: () => import('./feature/dynamic-form-fields-validation/dynamic-form-fields-validation.routes')
+  },
+  {
+    path: 'cross-field-validation',
+    loadChildren: () => import('./feature/cross-field-validation/cross-field-validation.routes')
+  },
   }
 ];

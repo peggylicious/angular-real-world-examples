@@ -1,0 +1,48 @@
+<h1>Cross Field Validation With Angular Signal Forms</h1>
+<form (submit)="submitForm($event)">
+  <div class="departure">
+    <div class="airport">
+      <label for="from">From:</label>
+      <select id="from" [formField]="bookingForm.departure">
+        <option value="">Select departure</option>
+        @for (airport of departureAirport(); track airport.id) {
+          <option [value]="airport.id"> {{ airport.airport }} ({{airport.code}})</option>
+        }
+      </select>
+    </div>
+    <div class="date">
+      <label for="departureDate">Date:</label>
+      <input type="date" id="departureDate" [formField]="bookingForm.departureDate">
+    </div>
+  </div>
+  <div class="arrival">
+    <div class="destination">
+      <div class="airport">
+        <label for="to">To:</label>
+        <select id="to" [formField]="bookingForm.arrival">
+          <option value="">Select destination</option>
+          @for (airport of arrivalAirport(); track airport.id) {
+            <option [value]="airport.id"> {{ airport.airport }} ({{airport.code}})</option>
+          }
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="date">
+    <div class="returning">
+      <input type="checkbox" id="returning" [formField]="bookingForm.returning">
+      Return?
+    </div>
+    @if (!bookingForm.returnDate().hidden()) {
+      <input type="date" id="return Date" [formField]="bookingForm.returnDate">
+      @for (error of bookingForm.returnDate().errors(); track $index) {
+        <p class="error">{{error.message}}</p>
+      }
+    }
+  </div>
+  <button
+    type="submit"
+    [disabled]="bookingForm().invalid()">
+    Search Flights
+  </button>
+</form>
