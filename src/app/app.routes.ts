@@ -13,5 +13,8 @@ export const routes: Routes = [
     path: 'cross-field-validation',
     loadChildren: () => import('./feature/cross-field-validation/cross-field-validation.routes')
   },
+  {
+    path: 'form-submission',
+    loadChildren: () => import('./feature/form-submission/form-submission.routes')
   }
 ];
