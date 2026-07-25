@@ -1,6 +1,6 @@
 import { Component, computed, signal } from '@angular/core';
 import { Airport, Booking } from '../../models/booking';
-import { form, FormField, hidden, submit, validate } from '@angular/forms/signals';
+import { form, FormField, hidden, required, submit, validate } from '@angular/forms/signals';
 import { AIRPORTS } from '../../constants/booking';
 
 @Component({
@@ -40,6 +40,10 @@ export class CrossFieldValidation {
         return !valueOf(schema.returning);
       },
     });
+    required(schema.departure);
+    required(schema.arrival);
+    required(schema.departureDate);
+    required(schema.returnDate);
   });
 
   departureAirport = computed(() => {
